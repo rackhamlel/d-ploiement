@@ -6,7 +6,7 @@ name: "déploiment auto suite à un push sur la branche master"
 on: 
   push:
     branches:
-      -main
+      - main
 
 jobs:
 # Création de la VM ubuntu
@@ -32,7 +32,7 @@ jobs:
           # Le fichier id_rsa doit avoir les bons droits
           chmod 600 ~/.ssh/id_rsa
           
-          END
+       
       # connexion SSH
       - name: "Connection SSH et git pull"
         env:
