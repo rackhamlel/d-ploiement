@@ -1,0 +1,43 @@
+# nom pour ce workflow
+name: "déploiment auto suite à un push sur la branche master"
+
+# ------------------------------------
+# Trigger
+on: 
+  push:
+    branches:
+      -master
+
+jobs:
+# Création de la VM ubuntu
+  creation-vm:
+    name: "Création d'une instance de Ubuntu"
+    runs-on: ubuntu-latest
+
+    steps:
+      # Ajout de la clé privée de l'utilisateur de déploiement 
+      # sur cette vm qui vient d'etre crée
+      - name: "Création du jeu de clé pour l'utilisateur de déploiement"
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }} 
+          SSH_USER: ${{ secrets.SSH_USER }}
+        run: |
+          # création dossier ~/.ssh
+          mkdir -p ~/.ssh/
+
+          # Ajout de la clé publique dans le fichier id_rsa
+          echo "$SSH_KEY" > ~/.ssh/id_rsa
+
+          # Le fichier id_rsa doit avoir les bons droits
+          chmod 600 ~/.ssh/id_rsa
+          
+          END
+      # connexion SSH
+      - name: "Connection SSH et git pull"
+        env:
+                SSH_KEY: ${{ secrets.SSH_KEY }}
+                SSH_HOST: ${{ secrets.SSH_HOST }} 
+        run: |
+          ssh $SSH_USER@$SSH_HOST 'cd /var/www/html/deploiement/ && git fetch && git pull'
+      # Git pull
