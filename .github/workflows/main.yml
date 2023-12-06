@@ -6,7 +6,7 @@ name: "déploiment auto suite à un push sur la branche master"
 on: 
   push:
     branches:
-      -master
+      -main
 
 jobs:
 # Création de la VM ubuntu
